@@ -1,18 +1,22 @@
 # QuickSel: Quick Selectivity Learning with Mixture Models
 
-This repository contains the code for the QuickSel paper published in SIGMOD 2020. The manuscript is also available from [this arxiv link](https://arxiv.org/abs/1812.10568).
+This repository contains the code used for the QuickSel paper in a quite unorganized manner.
+The QuickSel paper appeared at the SIGMOD conference in 2020. 
+The manuscript is also available from [this arxiv link](https://arxiv.org/abs/1812.10568).
 
 
 
 # Download and install
 
-Implemented in Java (and Maven). After cloning this repository, running `make all` will build the project. To build the project, of course, you will need JDK and Apache Maven installed on your machine.
+After cloning this repository, running `make all` will build the project. 
+Java and Maven are used for this project; thus,
+to build the project, you will need JDK and Apache Maven installed on your machine.
 
 
 
-# Test
+# Examples
 
-We provides some tests to show the performance of QuickSel. In the project directory, after project is built successfully, you can issue:
+We provide some examples to compare the performance of QuickSel to others. After project is built successfully, you can run:
 1. `make exp_speed` to run the speed test on synthetic generated data.
 1. `make exp_dmv` to run the test on DMV dataset. 
 1. `make exp_instacart` to run the test on Instacart dataset. 
@@ -22,5 +26,5 @@ We provides some tests to show the performance of QuickSel. In the project direc
 
 # Misc.
 
-The repository includes some other test code we wrote in the process of working on QuickSel. For example, `src/cpp/qpsolver` includes JNI-based code for calling `cvxopt`'s Quadratic Programming (QP) solver. Since QuickSel analytically computes the solution, the JNI-based code is not needed. However, if you want to re-enable the QP feature, extra steps are required (which is not currently documented here).
+The repository includes some other test code we wrote in the process of working on QuickSel. For example, `src/cpp/qpsolver` includes JNI-based code for calling `cvxopt`'s Quadratic Programming (QP) solver. Since QuickSel analytically computes the solution, the JNI-based code is not currently needed. However, if you want to re-enable the QP feature, extra steps are required (which is not currently documented here).
 
