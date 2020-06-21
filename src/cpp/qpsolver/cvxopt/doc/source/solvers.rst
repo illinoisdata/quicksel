@@ -21,7 +21,7 @@ linear inequalities are generalized inequalities with respect to a proper
 convex cone, defined as a product of a nonnegative orthant, second-order 
 cones, and positive semidefinite cones.   
 
-The basic functions are :func:`cp <cvxopt.solvers.cp>` and 
+The edu.illinois.quicksel.basic functions are :func:`cp <cvxopt.solvers.cp>` and
 :func:`cpl <cvxopt.solvers.cpl>`, described in the sections 
 :ref:`s-cp` and :ref:`s-cpl`.   A simpler interface for geometric 
 programming problems is discussed in the section :ref:`s-gp`.  

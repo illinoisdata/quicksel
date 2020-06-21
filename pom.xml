@@ -4,8 +4,8 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>quickSel</groupId>
   <artifactId>quickSel</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>Crumbs: Fast Selectivity Learning Algorithm</name>
+  <version>0.1</version>
+  <name>QuickSel: Quick Selectivity Learning</name>
   <build>
     <sourceDirectory>src/java</sourceDirectory>
     <testSourceDirectory>test/java</testSourceDirectory>

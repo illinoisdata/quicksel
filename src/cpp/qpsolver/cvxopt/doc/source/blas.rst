@@ -15,10 +15,10 @@ combined with the slicing and indexing of the section :ref:`s-indexing`.
 As an example, ``C = A * B`` gives the same result as the BLAS call 
 ``gemm(A, B, C)``.  The BLAS interface offers two advantages.  First, 
 some of the functions it includes are not easily implemented using the 
-basic matrix arithmetic.  For example, BLAS includes functions that 
+edu.illinois.quicksel.basic matrix arithmetic.  For example, BLAS includes functions that
 efficiently exploit symmetry or triangular matrix structure.  Second, there
 is a performance difference that can be significant for large matrices.   
-Although our implementation of the basic matrix arithmetic makes internal 
+Although our implementation of the edu.illinois.quicksel.basic matrix arithmetic makes internal
 calls to BLAS, it also often requires creating temporary matrices to store 
 intermediate results.  The BLAS functions on the other hand always operate 
 directly on their matrix arguments and never require any copying to 

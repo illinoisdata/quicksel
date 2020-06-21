@@ -61,7 +61,7 @@ def cpl(c, F, G = None, h = None, dims = None, A = None, b = None,
     ms[M-1] >= 0.  
 
 
-    Input arguments (basic usage).
+    Input arguments (edu.illinois.quicksel.basic usage).
 
         c is a dense 'd' matrix of size (n,1). 
 
@@ -1391,7 +1391,7 @@ def cp(F, G = None, h = None, dims = None, A = None, b = None,
     ms[M-1] >= 0.  
 
 
-    Input arguments (basic usage).
+    Input arguments (edu.illinois.quicksel.basic usage).
 
         F is a function that handles the following arguments.
 

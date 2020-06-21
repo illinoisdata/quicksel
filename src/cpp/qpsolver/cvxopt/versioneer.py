@@ -245,7 +245,7 @@ developers). `version` is suitable for display in an "about" box or a CLI
 `--version` output: it can be easily compared against release notes and lists
 of bugs fixed in various releases.
 
-The installer adds the following text to your `__init__.py` to place a basic
+The installer adds the following text to your `__init__.py` to place a edu.illinois.quicksel.basic
 version in `YOURPROJECT.__version__`:
 
     from ._version import get_versions

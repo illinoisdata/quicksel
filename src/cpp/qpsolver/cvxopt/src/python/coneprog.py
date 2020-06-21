@@ -60,7 +60,7 @@ def conelp(c, G, h, dims = None, A = None, b = None, primalstart = None,
     ms[M-1] >= 0.  
 
 
-    Input arguments (basic usage).
+    Input arguments (edu.illinois.quicksel.basic usage).
    
         c is a dense 'd' matrix of size (n,1).
 
@@ -1470,7 +1470,7 @@ def coneqp(P, q, G = None, h = None, dims = None, A = None, b = None,
     ms[M-1] >= 0.  
 
 
-    Input arguments (basic usage).
+    Input arguments (edu.illinois.quicksel.basic usage).
 
         P is a dense or sparse 'd' matrix of size (n,n) with the lower 
         triangular part of the Hessian of the objective stored in the 
