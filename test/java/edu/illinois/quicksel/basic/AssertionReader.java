@@ -20,9 +20,9 @@ public class AssertionReader {
 
   static int expireSize = 841;
 
-  public static String assertionFileName = "test/java/resources/assertion_dmv.txt";
+  public static String assertionFileName = "test/java/edu/illinois/quicksel/resources/assertion_dmv.txt";
 
-  public static String permanentAssertionFileName = "test/java/resources/permanent_assertion_dmv.txt";
+  public static String permanentAssertionFileName = "test/java/edu/illinois/quicksel/resources/permanent_assertion_dmv.txt";
 
   private static Double checkInBoundary(Double x, int boundary) {
     if (x < 0) {
@@ -95,7 +95,7 @@ public class AssertionReader {
   readAssertion(String assertionFile) throws IOException {
     
     BufferedReader br = new BufferedReader(
-        new FileReader(String.format("test/java/resources/%s", assertionFile)));
+        new FileReader(String.format("test/java/edu/illinois/quicksel/resources/%s", assertionFile)));
     String line;
     
     // left is assertion, right is permanent assertion
@@ -125,7 +125,7 @@ public class AssertionReader {
   public static Pair<Vector<Assertion>, Vector<Assertion>> 
   readAssertion(String assertionFile, String permenantAssertionFile) throws IOException {
     BufferedReader br = new BufferedReader(
-        new FileReader(String.format("test/java/resources/%s", assertionFile)));
+        new FileReader(String.format("test/java/edu/illinois/quicksel/resources/%s", assertionFile)));
     String line;
     
     // left is assertion, right is permanent assertion
@@ -149,7 +149,7 @@ public class AssertionReader {
     
     br.close();
     
-    br = new BufferedReader(new FileReader(String.format("test/java/resources/%s", permenantAssertionFile)));
+    br = new BufferedReader(new FileReader(String.format("test/java/edu/illinois/quicksel/resources/%s", permenantAssertionFile)));
     while ((line = br.readLine()) != null) {
       // use comma as separator
       String[] data = line.split(",");
