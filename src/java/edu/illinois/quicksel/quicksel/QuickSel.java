@@ -53,8 +53,12 @@ public class QuickSel implements SelectivityLearning {
   
   private int enforced_num_var = -1;   // used only positive.
   
-  private final double kernel_scale_factor = 1.0;
+  private double kernel_scale_factor = 1.0;
 
+  public void setKernelScaleFactor(double factor) {
+    kernel_scale_factor = factor;
+  }
+ 
   private DoubleMatrix A;
   
   private DoubleMatrix P;
@@ -114,8 +118,12 @@ public class QuickSel implements SelectivityLearning {
     assignOptimalWeights(false, 1e6);
   }
 
-  private static final double constraint_weight = 1e6;
+  private double constraint_weight = 1e6;
 
+  public void setConstraintWeight(double weight) {
+    constraint_weight = weight;
+  }
+ 
   public void assignOptimalWeights(boolean debug_output) {
     assignOptimalWeights(debug_output, constraint_weight);
   }

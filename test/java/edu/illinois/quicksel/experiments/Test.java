@@ -20,8 +20,11 @@ public class Test{
         int train_num = Integer.parseInt(args[1]);
         long rows = Long.parseLong(args[2]);
         int var_num = Integer.parseInt(args[3]);
+        double kernel_scale_factor = Double.parseDouble(args[4]);
+        double constraint_weight = Double.parseDouble(args[5]);
         System.out.println("Project Directory : "+ System.getProperty("user.dir"));
         System.out.println(String.format("dataset: %s, train_num: %d, row_num: %d, var_num: %d", dataset, train_num, rows, var_num));
+        System.out.println(String.format("kernel_scale_factor: %f, constraint_weight: %f", kernel_scale_factor, constraint_weight));
 
         Pair<Vector<Assertion>, Vector<Assertion>> assertionPair = AssertionReader.readAssertion(
             String.format("%s/train_assertion.csv", dataset),
@@ -42,9 +45,9 @@ public class Test{
         Vector<Assertion> train_assertions = new Vector<>(all_train_assertions.subList(0, train_num));
         System.out.println("Dataset and query set generations done.\n");
 
-        String result_file = String.format("%s-var=%d-train=%d.csv", dataset, var_num, train_num);
+        String result_file = String.format("%s-var=%d-train=%d-kernel=%.1f-weight=%.0f.csv", dataset, var_num, train_num, kernel_scale_factor, constraint_weight);
         System.out.println("QuickSel test");
-        quickSelTest(permanent_assertions, train_assertions, test_assertions, columns, rows, var_num, result_file);
+        quickSelTest(permanent_assertions, train_assertions, test_assertions, columns, rows, var_num, kernel_scale_factor, constraint_weight, result_file);
         System.out.println("");
     }
 
@@ -53,11 +56,14 @@ public class Test{
         Vector<Assertion> train_assertions,
         List<Assertion> test_assertions,
         int columns, long rows, int var_num,
+        double kernel_scale_factor, double constraint_weight,
         String result_file) throws IOException{
 
         Pair<Hyperrectangle, Double> range_freq = computeMinMaxRange(columns);
         QuickSel quickSel = new QuickSel(range_freq.getLeft(), range_freq.getRight());
         quickSel.setEnforcedVarCount(var_num);
+        quickSel.setKernelScaleFactor(kernel_scale_factor);
+        quickSel.setConstraintWeight(constraint_weight);
         // quickSel.setSubpopulationModel("kmeans");
 
         for (Assertion a: permanent_assertions) {
@@ -108,10 +114,6 @@ public class Test{
 
             csvWriter.append(String.format("%d,%.6f,%.1f,%.1f,%.6f\n", i, qerror, est_card, card, (end_time-start_time)/1e6));
             csvWriter.flush();
-
-            if (++i % 1000 == 0) {
-                System.out.println(String.format("%d queries done", i));
-            }
         }
         csvWriter.close();
         double rms_err = Math.sqrt(squared_err_sum / test_assertions.size());
