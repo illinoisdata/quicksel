@@ -9,10 +9,13 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.IOException;
 import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 import java.util.HashMap;
+
+import static com.google.common.math.Quantiles.percentiles;
 
 public class Test{
     public static void main(String[] args) throws IOException {
@@ -22,6 +25,7 @@ public class Test{
         int var_num = Integer.parseInt(args[3]);
         double kernel_scale_factor = Double.parseDouble(args[4]);
         double constraint_weight = Double.parseDouble(args[5]);
+        double eps = Double.parseDouble(args[6]);
         System.out.println("Project Directory : "+ System.getProperty("user.dir"));
         System.out.println(String.format("dataset: %s, train_num: %d, row_num: %d, var_num: %d", dataset, train_num, rows, var_num));
         System.out.println(String.format("kernel_scale_factor: %f, constraint_weight: %f", kernel_scale_factor, constraint_weight));
@@ -43,11 +47,13 @@ public class Test{
 
         // use first train_num of queries to train
         Vector<Assertion> train_assertions = new Vector<>(all_train_assertions.subList(0, train_num));
+        System.out.println("# actual training set: " + train_assertions.size());
         System.out.println("Dataset and query set generations done.\n");
 
         String result_file = String.format("%s-var=%d-train=%d-kernel=%.1f-weight=%.0f.csv", dataset, var_num, train_num, kernel_scale_factor, constraint_weight);
         System.out.println("QuickSel test");
-        quickSelTest(permanent_assertions, train_assertions, test_assertions, columns, rows, var_num, kernel_scale_factor, constraint_weight, result_file);
+        quickSelTest(permanent_assertions, train_assertions, test_assertions, columns, rows,
+            var_num, kernel_scale_factor, constraint_weight, eps, result_file);
         System.out.println("");
     }
 
@@ -56,7 +62,7 @@ public class Test{
         Vector<Assertion> train_assertions,
         List<Assertion> test_assertions,
         int columns, long rows, int var_num,
-        double kernel_scale_factor, double constraint_weight,
+        double kernel_scale_factor, double constraint_weight, double eps,
         String result_file) throws IOException{
 
         Pair<Hyperrectangle, Double> range_freq = computeMinMaxRange(columns);
@@ -78,14 +84,14 @@ public class Test{
 
         long time2 = System.nanoTime();
 
-        boolean debug_output = false;
+        boolean debug_output = true;
         quickSel.assignOptimalWeights(debug_output);
         long time3 = System.nanoTime();
 
         System.out.println(String.format("Insertion time: %.3f, Optimization time: %.3f", (time2 - time1) / 1e9, (time3 - time2) / 1e9));
         System.out.println(String.format("Total construction time: %.4f mins", (time3 - time1) / 1e9 / 60));
         double per_sel = Math.max(0, quickSel.answer(permanent_assertions.get(0).query));
-        System.out.println(String.format("Predict %.1f for permanent assertion", per_sel));
+        System.out.println(String.format("Predict %.5f for permanent assertion", per_sel));
 
         FileWriter csvWriter = new FileWriter(result_file);
         csvWriter.append("id,error,predict,label,dur_ms\n");
@@ -95,10 +101,12 @@ public class Test{
         double max_qerror = 0.0;
         double qerror_sum = 0.0;
         double latency_sum = 0.0;
+        List<Double> qerrors = new ArrayList<>();
         for (int i = 0; i < test_assertions.size(); ++i) {
             Assertion q = test_assertions.get(i);
             long start_time = System.nanoTime();
             double sel = Math.max(0, quickSel.answer(q.query));
+            sel += eps;
             long end_time = System.nanoTime();
             squared_err_sum += Math.pow(sel - q.freq, 2);
 
@@ -106,6 +114,7 @@ public class Test{
             double card = Math.round(q.freq * rows);
             double est_card = Math.round(sel * rows);
             double qerror = computeQError(card, est_card);
+            qerrors.add(qerror);
             if (max_qerror < qerror) {
                 max_qerror = qerror;
             }
@@ -120,8 +129,14 @@ public class Test{
         double qerror_mean = qerror_sum / test_assertions.size(); 
         double latency_mean = latency_sum / test_assertions.size();
 
+        double qerror99 = percentiles().index(99).compute(qerrors);
+        double qerror90 = percentiles().index(90).compute(qerrors);
+        double qerror50 = percentiles().index(50).compute(qerrors);
+
         System.out.println(String.format("Latency mean: %.5f", latency_mean));
-        System.out.println(String.format("Q-Error: max=%.5f, mean=%.5f", max_qerror, qerror_mean));
+        System.out.println(
+            String.format("Q-Error: max=%.5f, mean=%.5f, q99=%.5f, q90=%.5f, q50=%.5f",
+            max_qerror, qerror_mean, qerror99, qerror90, qerror50));
         System.out.println(String.format("RMS error: %.5f\n", rms_err));
     }
 
